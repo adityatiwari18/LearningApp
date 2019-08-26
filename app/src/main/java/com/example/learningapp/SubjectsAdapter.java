@@ -2,9 +2,12 @@ package com.example.learningapp;
 
 import android.content.Context;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +50,7 @@ public class SubjectsAdapter extends RecyclerView.Adapter<SubjectsAdapter.Viewho
         Data = subjects;
     }
 
+
     @Override
     public int getItemCount() {
         return Data.size();
@@ -56,13 +60,20 @@ public class SubjectsAdapter extends RecyclerView.Adapter<SubjectsAdapter.Viewho
     static class Viewholder extends RecyclerView.ViewHolder {
 
         TextView Title;
-        ConstraintLayout CardView;
+        CardView Subject;
 
-        public Viewholder(@NonNull View itemView) {
+        public Viewholder(@NonNull final View itemView) {
             super(itemView);
 
             this.Title = (TextView) itemView.findViewById(R.id.subjects);
-
+            this.Subject = (CardView) itemView.findViewById(R.id.Subject);
+            Subject.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(itemView.getContext(), CourseContent.class);
+                    itemView.getContext().startActivity(intent);
+                }
+            });
 
         }
     }
