@@ -2,6 +2,9 @@ package com.example.learningapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -24,8 +27,18 @@ import java.util.Map;
 public class AddCourse extends AppCompatActivity {
     private EditText courseNameEditText,courseDescEditText, courseDurationEditText;
     private Button addButton;
+
+    private static final String KEY_COURSE_ID="CO_id",
+            KEY_COURSE_NAME="CO_Name",
+            KEY_COURSE_DESC="CO_Desc",
+            KEY_COURSE_DURATION="CO_Duration",
+            KEY_COURSE_INSERTDATE="CO_Insertdate";
+    private static final String BASE_URL = "http://localhost/courses/db/";
+    private static String STRING_EMPTY = "";
     private SQLiteHandler db;
-    static int id = 0;
+    private ProgressDialog cDialog;
+    private int success;
+    String courseID, courseName, courseDesc,courseDuration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,70 +49,104 @@ public class AddCourse extends AppCompatActivity {
         courseDurationEditText = findViewById(R.id.course_duration);
         addButton = findViewById(R.id.add_button);
 
+
         db = new SQLiteHandler(getApplicationContext());
 
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String courseID, courseName, courseDesc,courseDuration;
 
-                courseName = courseNameEditText.getText().toString();
-                courseDesc = courseDescEditText.getText().toString();
-                courseDuration = courseDurationEditText.getText().toString();
-                //courseID = String.valueOf(++id);
-                if(!courseName.isEmpty() && !courseDesc.isEmpty() && !courseDuration.isEmpty()){
-                    requestUser(courseName,courseDesc,courseDuration);
-                }else{
-                    Toast.makeText(getApplicationContext(), "Please enter valid details", Toast.LENGTH_LONG).show();
+                if (CheckNetworkStatus.isNetworkAvailable(getApplicationContext())) {
+                    addMovie();
+                } else {
+                    Toast.makeText(AddCourse.this,
+                            "Unable to connect to internet",
+                            Toast.LENGTH_LONG).show();
 
                 }
             }
         });
     }
-    private void requestUser(final String courseName, final String courseDesc, final String courseDuration){
-        String url = "";
-        StringRequest stringRequest = new StringRequest(Request.Method.POST,url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try{
-                    JSONObject jsonObject = new JSONObject(response);
-                    boolean error = jsonObject.getBoolean("error");
-                    if(error){
-                        String courseID = jsonObject.getString("uid");
-                        JSONObject course = jsonObject.getJSONObject("course");
-                        String courseName = course.getString("courseName");
-                        String courseDesc = course.getString("courseDesc");
-                        String courseDuration = course.getString("courseDuration");
 
-                        db.addCourse(courseID, courseName, courseDesc, courseDuration);
+    /**
+     * Checks whether all files are filled. If so then calls AddMovieAsyncTask.
+     * Otherwise displays Toast message informing one or more fields left empty
+     */
+    private void addMovie() {
+        if (!STRING_EMPTY.equals(courseNameEditText.getText().toString()) &&
+                !STRING_EMPTY.equals(courseDescEditText.getText().toString()) &&
+                !STRING_EMPTY.equals(courseDurationEditText.getText().toString())) {
+
+            courseName = courseNameEditText.getText().toString();
+            courseDesc = courseDescEditText.getText().toString();
+            courseDuration = courseDurationEditText.getText().toString();
+            new AddCourseAsyncTask().execute();
+        } else {
+            Toast.makeText(AddCourse.this,
+                    "One or more fields left empty!",
+                    Toast.LENGTH_LONG).show();
+
+        }
+
+
+    }
+
+    /**
+     * AsyncTask for adding a movie
+     */
+    private class AddCourseAsyncTask extends AsyncTask<String, String, String> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            //Display proggress bar
+            cDialog = new ProgressDialog(AddCourse.this);
+            cDialog.setMessage("Adding Course. Please wait...");
+            cDialog.setIndeterminate(false);
+            cDialog.setCancelable(false);
+            cDialog.show();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            HttpJsonParser httpJsonParser = new HttpJsonParser();
+            Map<String, String> httpParams = new HashMap<>();
+            //Populating request parameters
+            httpParams.put(KEY_COURSE_NAME, courseName);
+            httpParams.put(KEY_COURSE_DESC, courseDesc);
+            httpParams.put(KEY_COURSE_DURATION, courseDuration);
+
+            JSONObject jsonObject = httpJsonParser.makeHttpRequest(
+                    BASE_URL + "add_course.php", "POST", httpParams);
+            try {
+                success = jsonObject.getInt("success");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        protected void onPostExecute(String result) {
+            cDialog.dismiss();
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    if (success == 1) {
+                        //Display success message
+                        Toast.makeText(AddCourse.this,
+                                "Course Added", Toast.LENGTH_LONG).show();
+                        Intent i = getIntent();
+                        //send result code 20 to notify about movie update
+                        setResult(20, i);
+                        //Finish ths activity and go back to listing activity
                         finish();
-                    }
-                    else {
-                        Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_LONG).show();
-                    }
 
-                }catch (JSONException e){
-                    e.printStackTrace();
+                    } else {
+                        Toast.makeText(AddCourse.this,
+                                "Some error occurred while adding course",
+                                Toast.LENGTH_LONG).show();
+
+                    }
                 }
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        }){
-            protected Map<String, String> getParams(){
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("tag","add");
-                params.put("courseName", courseName);
-                params.put("courseDesc", courseDesc);
-                params.put("courseDuration", courseDuration);
-
-                return params;
-            }
-        };
-
-        Volley.newRequestQueue(getApplicationContext()).add(stringRequest);
+            });
+        }
     }
 }
