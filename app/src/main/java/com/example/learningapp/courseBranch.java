@@ -112,7 +112,8 @@ public class courseBranch extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     public void onClick(View v) {
-
+        Intent intent = new Intent(this, AddCourse.class);
+        startActivity(intent);
     }
 
     @Override

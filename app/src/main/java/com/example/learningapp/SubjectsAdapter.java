@@ -61,17 +61,19 @@ public class SubjectsAdapter extends RecyclerView.Adapter<SubjectsAdapter.Viewho
 
         TextView Title;
         CardView Subject;
+        Context mContext;
 
         public Viewholder(@NonNull final View itemView) {
             super(itemView);
 
             this.Title = (TextView) itemView.findViewById(R.id.subjects);
             this.Subject = (CardView) itemView.findViewById(R.id.Subject);
+            this.mContext = itemView.getContext();
             Subject.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(itemView.getContext(), CourseContent.class);
-                    itemView.getContext().startActivity(intent);
+                    mContext.startActivity(intent);
                 }
             });
 
