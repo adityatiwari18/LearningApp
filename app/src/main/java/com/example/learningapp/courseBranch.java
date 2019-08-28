@@ -1,5 +1,6 @@
 package com.example.learningapp;
 
+        import android.app.ProgressDialog;
         import android.content.Intent;
 
         import androidx.appcompat.app.AlertDialog;
@@ -7,19 +8,39 @@ package com.example.learningapp;
         import androidx.recyclerview.widget.LinearLayoutManager;
         import androidx.recyclerview.widget.RecyclerView;
 
+        import android.os.AsyncTask;
         import android.os.Bundle;
         import android.view.View;
         import android.widget.AdapterView;
         import android.widget.ArrayAdapter;
         import android.widget.Button;
         import android.widget.EditText;
+        import android.widget.ListView;
         import android.widget.Spinner;
         import android.widget.Toast;
 
+        import org.json.JSONArray;
+        import org.json.JSONException;
+        import org.json.JSONObject;
+
         import java.util.ArrayList;
+        import java.util.HashMap;
         import java.util.List;
 
 public class courseBranch extends AppCompatActivity implements AdapterView.OnItemSelectedListener, View.OnClickListener {
+
+    private static final String KEY_SUCCESS = "success";
+    private static final String KEY_DATA = "data";
+    private static final String KEY_COURSE_ID="CO_id",
+            KEY_COURSE_NAME="CO_Name",
+            KEY_COURSE_DESC="CO_Desc",
+            KEY_COURSE_DURATION="CO_Duration",
+            KEY_COURSE_INSERTDATE="CO_Insertdate";
+    private static final String BASE_URL = "http://localhost/courses/db/";
+    private ArrayList<HashMap<String, String>> courseList;
+    private ListView courseListView;
+    private ProgressDialog pDialog;
+
 
     String[] Engineering = {"Course","Computer Science and Engineering", "Electronics and Communication Engineering","Aerospace Engineering"
                         ,"Mechanical Engineering","AP - Upstream","AP - Gas","Civil Engineering","Chemical Engineering"};
@@ -51,12 +72,12 @@ public class courseBranch extends AppCompatActivity implements AdapterView.OnIte
         mSubjectsAdapter = new SubjectsAdapter(Subjects, this);
         Intent intent = getIntent();
         String Course = intent.getStringExtra("KEY");
+
         AddSub = (Button) findViewById(R.id.AddSubject);
         AddSub.setOnClickListener(this);
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(mSubjectsAdapter);
-
 
 
         switch (Course){
@@ -128,4 +149,111 @@ public class courseBranch extends AppCompatActivity implements AdapterView.OnIte
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
+
+    /**
+     * Fetches the list of movies from the server
+     */
+    private class FetchMoviesAsyncTask extends AsyncTask<String, String, String> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            //Display progress bar
+            pDialog = new ProgressDialog(courseBranch.this);
+            pDialog.setMessage("Loading course. Please wait...");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(false);
+            pDialog.show();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            HttpJsonParser httpJsonParser = new HttpJsonParser();
+            JSONObject jsonObject = httpJsonParser.makeHttpRequest(
+                    BASE_URL + "fetch_all_course.php", "GET", null);
+            try {
+                int success = jsonObject.getInt(KEY_SUCCESS);
+                JSONArray courses;
+                if (success == 1) {
+                    courseList = new ArrayList<>();
+                    courses = jsonObject.getJSONArray(KEY_DATA);
+                    //Iterate through the response and populate movies list
+                    for (int i = 0; i < courses.length(); i++) {
+                        JSONObject course = courses.getJSONObject(i);
+                        Integer courseId = course.getInt(KEY_COURSE_ID);
+                        String courseName = course.getString(KEY_COURSE_NAME);
+                        HashMap<String, String> map = new HashMap<String, String>();
+                        map.put(KEY_COURSE_ID, courseId.toString());
+                        map.put(KEY_COURSE_NAME, courseName);
+                        courseList.add(map);
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        protected void onPostExecute(String result) {
+            pDialog.dismiss();
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    //populateCourseList();
+                }
+            });
+        }
+
+    }
+
+    /**
+     * Updating parsed JSON data into ListView
+     * */
+  /*
+    private void populateCourseList() {
+        ListAdapter adapter = new SimpleAdapter(
+                MovieListingActivity.this, movieList,
+                R.layout.list_item, new String[]{KEY_MOVIE_ID,
+                KEY_MOVIE_NAME},
+                new int[]{R.id.movieId, R.id.movieName});
+        // updating listview
+        movieListView.setAdapter(adapter);
+        //Call MovieUpdateDeleteActivity when a movie is clicked
+        movieListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                //Check for network connectivity
+                if (CheckNetworkStatus.isNetworkAvailable(getApplicationContext())) {
+                    String movieId = ((TextView) view.findViewById(R.id.movieId))
+                            .getText().toString();
+                    Intent intent = new Intent(getApplicationContext(),
+                            MovieUpdateDeleteActivity.class);
+                    intent.putExtra(KEY_MOVIE_ID, movieId);
+                    startActivityForResult(intent, 20);
+
+                } else {
+                    Toast.makeText(MovieListingActivity.this,
+                            "Unable to connect to internet",
+                            Toast.LENGTH_LONG).show();
+
+                }
+
+
+            }
+        });
+
+    }
+*/
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == 20) {
+            // If the result code is 20 that means that
+            // the user has deleted/updated the movie.
+            // So refresh the movie listing
+            Intent intent = getIntent();
+            finish();
+            startActivity(intent);
+        }
+    }
+
+
 }
