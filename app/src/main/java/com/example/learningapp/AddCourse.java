@@ -55,60 +55,16 @@ public class AddCourse extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if(!courseName.isEmpty() && !courseDesc.isEmpty() && !courseDuration.isEmpty()){
-                    requestUser(courseName,courseDesc,courseDuration);
-                }else{
-                    Toast.makeText(getApplicationContext(), "Please enter valid details", Toast.LENGTH_LONG).show();
+                if (CheckNetworkStatus.isNetworkAvailable(getApplicationContext())) {
+                    addMovie();
+                } else {
+                    Toast.makeText(AddCourse.this,
+                            "Unable to connect to internet",
+                            Toast.LENGTH_LONG).show();
 
                 }
             }
         });
-    }
-    private void requestUser(final String courseName, final String courseDesc, final String courseDuration){
-        String url = "";
-        StringRequest stringRequest = new StringRequest(Request.Method.POST,url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try{
-                    JSONObject jsonObject = new JSONObject(response);
-                    boolean error = jsonObject.getBoolean("error");
-                    if(error){
-                        String courseID = jsonObject.getString("uid");
-                        JSONObject course = jsonObject.getJSONObject("course");
-                        String courseName = course.getString("courseName");
-                        String courseDesc = course.getString("courseDesc");
-                        String courseDuration = course.getString("courseDuration");
-
-                        db.addCourse(courseID, courseName, courseDesc, courseDuration);
-                        finish();
-                    }
-                    else {
-                        Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_LONG).show();
-                    }
-
-                }catch (JSONException e){
-                    e.printStackTrace();
-                }
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        }){
-            protected Map<String, String> getParams(){
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("tag","add");
-                params.put("courseName", courseName);
-                params.put("courseDesc", courseDesc);
-                params.put("courseDuration", courseDuration);
-
-                return params;
-            }
-        };
-
-        Volley.newRequestQueue(getApplicationContext()).add(stringRequest);
     }
 
     /**
