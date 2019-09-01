@@ -3,7 +3,6 @@ package com.example.learningapp;
         import android.app.ProgressDialog;
         import android.content.Intent;
 
-        import androidx.appcompat.app.AlertDialog;
         import androidx.appcompat.app.AppCompatActivity;
         import androidx.recyclerview.widget.LinearLayoutManager;
         import androidx.recyclerview.widget.RecyclerView;
@@ -14,7 +13,6 @@ package com.example.learningapp;
         import android.widget.AdapterView;
         import android.widget.ArrayAdapter;
         import android.widget.Button;
-        import android.widget.EditText;
         import android.widget.ListView;
         import android.widget.Spinner;
         import android.widget.Toast;
@@ -36,7 +34,7 @@ public class courseBranch extends AppCompatActivity implements AdapterView.OnIte
             KEY_COURSE_DESC="CO_Desc",
             KEY_COURSE_DURATION="CO_Duration",
             KEY_COURSE_INSERTDATE="CO_Insertdate";
-    private static final String BASE_URL = "http://localhost/courses/db/";
+    private static final String BASE_URL = "http://10.12.18.235/courses/db/";
     private ArrayList<HashMap<String, String>> courseList;
     private ListView courseListView;
     private ProgressDialog pDialog;
@@ -69,16 +67,19 @@ public class courseBranch extends AppCompatActivity implements AdapterView.OnIte
         sp.setOnItemSelectedListener(this);
         sp2 = (Spinner) findViewById(R.id.spinner2);
         sp2.setOnItemSelectedListener(this);
+
+        AddSub = (Button) findViewById(R.id.AddSubject);
+        AddSub.setOnClickListener(this);
+        AddSub.setVisibility(View.VISIBLE);
+
         mSubjectsAdapter = new SubjectsAdapter(Subjects, this);
         Intent intent = getIntent();
         String Course = intent.getStringExtra("KEY");
 
-        AddSub = (Button) findViewById(R.id.AddSubject);
-        AddSub.setOnClickListener(this);
+
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(mSubjectsAdapter);
-
 
         switch (Course){
 
@@ -117,16 +118,12 @@ public class courseBranch extends AppCompatActivity implements AdapterView.OnIte
     }
 
     void getSubjects(String Course, String Semister){
-        FetchMoviesAsyncTask fetchMoviesAsyncTask = new FetchMoviesAsyncTask();
-        fetchMoviesAsyncTask.execute();
+
 
         if(Course == CSE&&Semister=="I"){
-            for(HashMap<String,String> data : courseList){
-                Subjects.add(data.get(KEY_COURSE_NAME));
-            }
-            AddSub.setVisibility(View.VISIBLE);
-            mSubjectsAdapter.setSubjects(Subjects);
-            mSubjectsAdapter.notifyDataSetChanged();
+            FetchCourseAsyncTask fetchCourseAsyncTask = new FetchCourseAsyncTask();
+            fetchCourseAsyncTask.execute();
+
         }else{
             Subjects.clear();
             AddSub.setVisibility(View.INVISIBLE);
@@ -156,7 +153,7 @@ public class courseBranch extends AppCompatActivity implements AdapterView.OnIte
     /**
      * Fetches the list of movies from the server
      */
-    private class FetchMoviesAsyncTask extends AsyncTask<String, String, String> {
+    private class FetchCourseAsyncTask extends AsyncTask<String, String, String> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -182,10 +179,10 @@ public class courseBranch extends AppCompatActivity implements AdapterView.OnIte
                     //Iterate through the response and populate movies list
                     for (int i = 0; i < courses.length(); i++) {
                         JSONObject course = courses.getJSONObject(i);
-                        Integer courseId = course.getInt(KEY_COURSE_ID);
+                        String courseDesc = course.getString(KEY_COURSE_DESC);
                         String courseName = course.getString(KEY_COURSE_NAME);
                         HashMap<String, String> map = new HashMap<String, String>();
-                        map.put(KEY_COURSE_ID, courseId.toString());
+                        map.put(KEY_COURSE_DESC, courseDesc);
                         map.put(KEY_COURSE_NAME, courseName);
                         courseList.add(map);
                     }
@@ -200,7 +197,11 @@ public class courseBranch extends AppCompatActivity implements AdapterView.OnIte
             pDialog.dismiss();
             runOnUiThread(new Runnable() {
                 public void run() {
-                    //populateCourseList();
+                    for(HashMap<String,String> data : courseList){
+                        Subjects.add(data.get(KEY_COURSE_NAME));
+                    }
+                    mSubjectsAdapter.setSubjects(Subjects);
+                    mSubjectsAdapter.notifyDataSetChanged();
                 }
             });
         }
@@ -210,14 +211,15 @@ public class courseBranch extends AppCompatActivity implements AdapterView.OnIte
     /**
      * Updating parsed JSON data into ListView
      * */
-  /*
-    private void populateCourseList() {
-        ListAdapter adapter = new SimpleAdapter(
-                MovieListingActivity.this, movieList,
-                R.layout.list_item, new String[]{KEY_MOVIE_ID,
+    /*private void populateCourseList() {
+        SubjectsAdapter adapter = new SubjectsAdapter(courseList,getApplicationContext());
+
+               *//* R.layout.list_item, new String[]{KEY_MOVIE_ID,
                 KEY_MOVIE_NAME},
-                new int[]{R.id.movieId, R.id.movieName});
+                new int[]{R.id.movieId, R.id.movieName});*//*
+
         // updating listview
+        *//*
         movieListView.setAdapter(adapter);
         //Call MovieUpdateDeleteActivity when a movie is clicked
         movieListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -241,10 +243,9 @@ public class courseBranch extends AppCompatActivity implements AdapterView.OnIte
 
 
             }
-        });
+        });*//*
 
-    }
-*/
+    }*/
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

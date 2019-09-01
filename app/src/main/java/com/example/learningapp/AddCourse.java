@@ -33,7 +33,7 @@ public class AddCourse extends AppCompatActivity {
             KEY_COURSE_DESC="CO_Desc",
             KEY_COURSE_DURATION="CO_Duration",
             KEY_COURSE_INSERTDATE="CO_Insertdate";
-    private static final String BASE_URL = "http://localhost/courses/db/";
+    private static final String BASE_URL = "http://10.12.18.235/courses/db/";
     private static String STRING_EMPTY = "";
     private SQLiteHandler db;
     private ProgressDialog cDialog;
