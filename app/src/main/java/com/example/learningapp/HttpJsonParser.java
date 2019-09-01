@@ -46,6 +46,7 @@ public class HttpJsonParser {
                 urlObj = new URL(url);
                 urlConnection = (HttpURLConnection) urlObj.openConnection();
                 urlConnection.setRequestMethod(method);
+                urlConnection.connect();
 
 
             } else {
@@ -55,10 +56,9 @@ public class HttpJsonParser {
                 urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
                 urlConnection.setRequestProperty("Content-Length", String.valueOf(encodedParams.getBytes().length));
                 urlConnection.getOutputStream().write(encodedParams.getBytes());
+                urlConnection.connect();
             }
 
-
-            urlConnection.connect();
             is = urlConnection.getInputStream();
             BufferedReader reader = new BufferedReader(new InputStreamReader(is));
             StringBuilder sb = new StringBuilder();
