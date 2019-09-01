@@ -117,12 +117,12 @@ public class courseBranch extends AppCompatActivity implements AdapterView.OnIte
     }
 
     void getSubjects(String Course, String Semister){
-        FetchMoviesAsyncTask fetchMoviesAsyncTask = new FetchMoviesAsyncTask();
-        fetchMoviesAsyncTask.execute();
+//        FetchMoviesAsyncTask fetchMoviesAsyncTask = new FetchMoviesAsyncTask();
+//        fetchMoviesAsyncTask.execute();
 
-        if(Course == CSE&&Semister=="I"){
-            for(HashMap<String,String> data : courseList){
-                Subjects.add(data.get(KEY_COURSE_NAME));
+        if(Course == CSE && Semister=="I"){
+            for(int i = 0 ; i<10 ;i++){
+                Subjects.add("Subject "+i);
             }
             AddSub.setVisibility(View.VISIBLE);
             mSubjectsAdapter.setSubjects(Subjects);
