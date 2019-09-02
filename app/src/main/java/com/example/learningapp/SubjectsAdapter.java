@@ -2,9 +2,7 @@ package com.example.learningapp;
 
 import android.content.Context;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
@@ -13,8 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class SubjectsAdapter extends RecyclerView.Adapter<SubjectsAdapter.Viewholder> {
@@ -34,7 +30,7 @@ public class SubjectsAdapter extends RecyclerView.Adapter<SubjectsAdapter.Viewho
     @Override
     public Viewholder onCreateViewHolder(@NonNull ViewGroup viewGroup, final int i) {
 //        Log.d(TAG, "onCreateViewHolder: Starts");
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.subjectsfragment, viewGroup, false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.subject_layout, viewGroup, false);
 
         return new Viewholder(view);
     }
@@ -74,7 +70,7 @@ public class SubjectsAdapter extends RecyclerView.Adapter<SubjectsAdapter.Viewho
             Subject.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(itemView.getContext(), CourseContent.class);
+                    Intent intent = new Intent(itemView.getContext(), Concept.class);
                     mContext.startActivity(intent);
                 }
             });
