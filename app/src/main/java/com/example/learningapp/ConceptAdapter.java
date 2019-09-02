@@ -13,14 +13,14 @@ import android.widget.TextView;
 
 import java.util.List;
 
-public class SubjectsAdapter extends RecyclerView.Adapter<SubjectsAdapter.Viewholder> {
+public class ConceptAdapter extends RecyclerView.Adapter<ConceptAdapter.Viewholder> {
 
     private static final String TAG = "MyAdapter";
 
     private List<String> Data;
     private Context mContext;
 
-    public SubjectsAdapter(List<String> data, Context context) {
+    public ConceptAdapter(List<String> data, Context context) {
         Data = data;
         mContext = context;
     }
@@ -30,7 +30,7 @@ public class SubjectsAdapter extends RecyclerView.Adapter<SubjectsAdapter.Viewho
     @Override
     public Viewholder onCreateViewHolder(@NonNull ViewGroup viewGroup, final int i) {
 //        Log.d(TAG, "onCreateViewHolder: Starts");
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.subject_layout, viewGroup, false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.concept_layout, viewGroup, false);
 
         return new Viewholder(view);
     }
@@ -44,7 +44,7 @@ public class SubjectsAdapter extends RecyclerView.Adapter<SubjectsAdapter.Viewho
 //        Log.d(TAG, "onBindViewHolder: Ends");
     }
 
-    void setSubjects(List<String> subjects){
+    void setConcept(List<String> subjects){
         Data = subjects;
     }
 
@@ -67,13 +67,14 @@ public class SubjectsAdapter extends RecyclerView.Adapter<SubjectsAdapter.Viewho
             this.Title = (TextView) itemView.findViewById(R.id.subjects);
             this.Subject = (CardView) itemView.findViewById(R.id.Subject);
             this.mContext = itemView.getContext();
-            Subject.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(itemView.getContext(), Concept.class);
-                    mContext.startActivity(intent);
-                }
-            });
+
+//            Subject.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    Intent intent = new Intent(itemView.getContext(), //activity to start);
+//                    mContext.startActivity(intent);
+//                }
+//            });
 
         }
     }
