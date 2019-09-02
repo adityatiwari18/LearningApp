@@ -131,7 +131,7 @@ public class courseBranch extends AppCompatActivity implements AdapterView.OnIte
 
         }else{
             Subjects.clear();
-            AddSub.setVisibility(View.INVISIBLE);
+            //AddSub.setVisibility(View.INVISIBLE);
             mSubjectsAdapter.notifyDataSetChanged();
         }
     }
@@ -155,9 +155,7 @@ public class courseBranch extends AppCompatActivity implements AdapterView.OnIte
 
     }
 
-    /**
-     * Fetches the list of movies from the server
-     */
+
     private class FetchCourseAsyncTask extends AsyncTask<String, String, String> {
         @Override
         protected void onPreExecute() {

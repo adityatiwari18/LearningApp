@@ -33,7 +33,6 @@ public class AddCourse extends AppCompatActivity implements View.OnClickListener
     private static final String BASE_URL = "http://localhost/courses/db/";
     private static int RESULT_LOAD_IMAGE = 1;
     private static String STRING_EMPTY = "";
-    private SQLiteHandler db;
     private ProgressDialog cDialog;
     private int success;
     String courseID, courseName, courseDesc, courseDuration;
@@ -60,14 +59,12 @@ public class AddCourse extends AppCompatActivity implements View.OnClickListener
             }
         });
 
-        db = new SQLiteHandler(getApplicationContext());
-
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 if (CheckNetworkStatus.isNetworkAvailable(getApplicationContext())) {
-                    addMovie();
+                    addCourse();
                 } else {
                     Toast.makeText(AddCourse.this,
                             "Unable to connect to internet",
@@ -90,7 +87,7 @@ public class AddCourse extends AppCompatActivity implements View.OnClickListener
             cursor.moveToFirst();
 
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-            String picturePath = cursor.getString(columnIndex);                    //SAVED PICTURE PATH
+            String picturePath = cursor.getString(columnIndex);         //SAVED PICTURE PATH
             cursor.close();
 
 
@@ -107,7 +104,7 @@ public class AddCourse extends AppCompatActivity implements View.OnClickListener
      * Checks whether all files are filled. If so then calls AddMovieAsyncTask.
      * Otherwise displays Toast message informing one or more fields left empty
      */
-    private void addMovie() {
+    private void addCourse() {
         if (!STRING_EMPTY.equals(courseNameEditText.getText().toString()) &&
                 !STRING_EMPTY.equals(courseDescEditText.getText().toString()) &&
                 !STRING_EMPTY.equals(courseDurationEditText.getText().toString())) {
