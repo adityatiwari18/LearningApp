@@ -34,7 +34,7 @@ public class AddConcept extends AppCompatActivity {
             KEY_CONCEPT_DURATION = "CN_Duration",
             KEY_CONCEPT_INSERTDATE = "CN_Insertdate";
 
-    private static final String BASE_URL = "http://localhost/courses/db/";
+    private static final String BASE_URL = "http://10.12.18.235/courses/db/";
     private static String STRING_EMPTY = "";
     private ProgressDialog cDialog;
     private int success;
@@ -52,6 +52,20 @@ public class AddConcept extends AppCompatActivity {
         addButton = findViewById(R.id.add_concept_button);
 
         addImage = (Button) findViewById(R.id.image_concept);
+
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (CheckNetworkStatus.isNetworkAvailable(getApplicationContext())) {
+                    addConcept();
+                } else {
+                    Toast.makeText(AddConcept.this,
+                            "Unable to connect to internet",
+                            Toast.LENGTH_LONG).show();
+
+                }
+            }
+        });
 
         addImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,7 +102,7 @@ public class AddConcept extends AppCompatActivity {
      * Checks whether all files are filled. If so then calls AddMovieAsyncTask.
      * Otherwise displays Toast message informing one or more fields left empty
      */
-    private void addCourse() {
+    private void addConcept() {
         if (!STRING_EMPTY.equals(conceptNameEditText.getText().toString()) &&
                 !STRING_EMPTY.equals(conceptDescEditText.getText().toString()) &&
                 !STRING_EMPTY.equals(conceptDurationEditText.getText().toString())) {
@@ -115,7 +129,7 @@ public class AddConcept extends AppCompatActivity {
             super.onPreExecute();
             //Display proggress bar
             cDialog = new ProgressDialog(AddConcept.this);
-            cDialog.setMessage("Adding Course. Please wait...");
+            cDialog.setMessage("Adding Concept. Please wait...");
             cDialog.setIndeterminate(false);
             cDialog.setCancelable(false);
             cDialog.show();
@@ -147,7 +161,7 @@ public class AddConcept extends AppCompatActivity {
                     if (success == 1) {
                         //Display success message
                         Toast.makeText(AddConcept.this,
-                                "Course Added", Toast.LENGTH_LONG).show();
+                                "Concept Added", Toast.LENGTH_LONG).show();
                         Intent i = getIntent();
                         //send result code 20 to notify about movie update
                         setResult(20, i);

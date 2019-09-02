@@ -5,7 +5,6 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,17 +64,8 @@ public class ConceptAdapter extends RecyclerView.Adapter<ConceptAdapter.Viewhold
             super(itemView);
 
             this.Title = (TextView) itemView.findViewById(R.id.subjects);
-            this.Subject = (CardView) itemView.findViewById(R.id.Subject);
+            this.Subject = (CardView) itemView.findViewById(R.id.Concept);
             this.mContext = itemView.getContext();
-
-//            Subject.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Intent intent = new Intent(itemView.getContext(), //activity to start);
-//                    mContext.startActivity(intent);
-//                }
-//            });
-
         }
     }
 }

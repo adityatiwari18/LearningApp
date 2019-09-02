@@ -24,13 +24,12 @@ import java.util.Map;
 public class AddCourse extends AppCompatActivity implements View.OnClickListener {
     private EditText courseNameEditText, courseDescEditText, courseDurationEditText;
     private Button addButton, addImage;
-
     private static final String KEY_COURSE_ID = "CO_id",
             KEY_COURSE_NAME = "CO_Name",
             KEY_COURSE_DESC = "CO_Desc",
             KEY_COURSE_DURATION = "CO_Duration",
             KEY_COURSE_INSERTDATE = "CO_Insertdate";
-    private static final String BASE_URL = "http://localhost/courses/db/";
+    private static final String BASE_URL = "http://10.12.18.235/courses/db/";
     private static int RESULT_LOAD_IMAGE = 1;
     private static String STRING_EMPTY = "";
     private ProgressDialog cDialog;
@@ -165,7 +164,7 @@ public class AddCourse extends AppCompatActivity implements View.OnClickListener
                         Toast.makeText(AddCourse.this,
                                 "Course Added", Toast.LENGTH_LONG).show();
                         Intent i = getIntent();
-                        //send result code 20 to notify about movie update
+                        //send result code 20 to notify about course update
                         setResult(20, i);
                         //Finish ths activity and go back to listing activity
                         finish();

@@ -32,8 +32,9 @@ public class CourseContent extends AppCompatActivity {
             KEY_CONCEPT_DURATION = "CN_Duration",
             KEY_CONCEPT_INSERTDATE = "CN_Insertdate";
     List<String> Concepts = new ArrayList<>();
+    ConceptAdapter mConceptAdapter;
 
-    private static final String BASE_URL = "http://localhost/courses/db/";
+    private static final String BASE_URL = "http://10.12.18.235/courses/db/";
     private ArrayList<HashMap<String, String>> conceptList;
     private ListView conceptListView;
     private ProgressDialog pDialog;
@@ -62,7 +63,7 @@ public class CourseContent extends AppCompatActivity {
             super.onPreExecute();
             //Display progress bar
             pDialog = new ProgressDialog(CourseContent.this);
-            pDialog.setMessage("Loading course. Please wait...");
+            pDialog.setMessage("Loading concept. Please wait...");
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(false);
             pDialog.show();
@@ -103,8 +104,8 @@ public class CourseContent extends AppCompatActivity {
                     for(HashMap<String,String> data : conceptList){
                         Concepts.add(data.get(KEY_CONCEPT_NAME));
                     }
-                    /*mConceptsAdapter.setSubjects(Concepts);
-                    mConceptsAdapter.notifyDataSetChanged();*/
+                    mConceptAdapter.setConcept(Concepts);
+                    mConceptAdapter.notifyDataSetChanged();
                 }
             });
         }

@@ -3,7 +3,6 @@ package com.example.learningapp;
         import android.app.ProgressDialog;
         import android.content.Intent;
 
-        import androidx.appcompat.app.AlertDialog;
         import androidx.appcompat.app.AppCompatActivity;
         import androidx.recyclerview.widget.LinearLayoutManager;
         import androidx.recyclerview.widget.RecyclerView;
@@ -14,7 +13,6 @@ package com.example.learningapp;
         import android.widget.AdapterView;
         import android.widget.ArrayAdapter;
         import android.widget.Button;
-        import android.widget.EditText;
         import android.widget.ListView;
         import android.widget.Spinner;
         import android.widget.Toast;
@@ -27,7 +25,7 @@ package com.example.learningapp;
         import java.util.HashMap;
         import java.util.List;
 
-public class courseBranch extends AppCompatActivity implements AdapterView.OnItemSelectedListener, View.OnClickListener {
+public class CourseBranch extends AppCompatActivity implements AdapterView.OnItemSelectedListener, View.OnClickListener {
 
     private static final String KEY_SUCCESS = "success";
     private static final String KEY_DATA = "data";
@@ -54,7 +52,7 @@ public class courseBranch extends AppCompatActivity implements AdapterView.OnIte
     String[] Business = { "Course","BBA. BBA stands for Bachelor of Business Administration","BMS","BBA+MBA Integrated course"
                         ,"Degree in Hotel & Hospitality Management","B Sc in Hotel Management","Diploma Management courses after 12th"
                         ,"BA Management courses","BBS (Bachelor of Business Studies)"};
-    String[] Semister = {"Semister","I","II","III","IV","V","VI","VII","VIII"};
+    String[] Semester = {"Semester","I","II","III","IV","V","VI","VII","VIII"};
     private static final String CSE = "Computer Science and Engineering";
     Spinner sp,sp2;
     RecyclerView mRecyclerView;
@@ -114,7 +112,7 @@ public class courseBranch extends AppCompatActivity implements AdapterView.OnIte
                 sp.setAdapter(aa3);
         }
 
-        ArrayAdapter arrayAdapter = new ArrayAdapter(this,android.R.layout.simple_spinner_item,Semister);
+        ArrayAdapter arrayAdapter = new ArrayAdapter(this,android.R.layout.simple_spinner_item, Semester);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sp2.setAdapter(arrayAdapter);
 
@@ -144,7 +142,7 @@ public class courseBranch extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        if (!sp.getSelectedItem().toString().equalsIgnoreCase("Course")&& !sp2.getSelectedItem().toString().equalsIgnoreCase("Semister")) {
+        if (!sp.getSelectedItem().toString().equalsIgnoreCase("Course")&& !sp2.getSelectedItem().toString().equalsIgnoreCase("Semester")) {
             Toast.makeText(getApplicationContext(), sp.getSelectedItem().toString(), Toast.LENGTH_SHORT).show();
             getSubjects(sp.getSelectedItem().toString(),sp2.getSelectedItem().toString());
         }
@@ -161,7 +159,7 @@ public class courseBranch extends AppCompatActivity implements AdapterView.OnIte
         protected void onPreExecute() {
             super.onPreExecute();
             //Display progress bar
-            pDialog = new ProgressDialog(courseBranch.this);
+            pDialog = new ProgressDialog(CourseBranch.this);
             pDialog.setMessage("Loading course. Please wait...");
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(false);
@@ -203,6 +201,7 @@ public class courseBranch extends AppCompatActivity implements AdapterView.OnIte
                     for(HashMap<String,String> data : courseList){
                         Subjects.add(data.get(KEY_COURSE_NAME));
                     }
+
                     mSubjectsAdapter.setSubjects(Subjects);
                     mSubjectsAdapter.notifyDataSetChanged();
                 }
