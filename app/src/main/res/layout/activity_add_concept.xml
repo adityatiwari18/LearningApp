@@ -11,19 +11,19 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter name of the course"
-        android:id="@+id/course_name"/>
+        android:hint="Enter name of the concept"
+        android:id="@+id/concept_name"/>
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter description  of the course"
-        android:id="@+id/course_desc"
+        android:hint="Enter description  of the concept"
+        android:id="@+id/concept_desc"
         android:layout_marginTop="4dp"/>
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter duration of the course(in months)"
-        android:id="@+id/course_duration"
+        android:hint="Enter duration of the concept(in months)"
+        android:id="@+id/concept_duration"
         android:layout_marginTop="4dp"/>
 
     <Button
@@ -34,7 +34,7 @@
         android:text="Add Image" />
 
     <Button
-        android:id="@+id/add_button"
+        android:id="@+id/add_concept_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
