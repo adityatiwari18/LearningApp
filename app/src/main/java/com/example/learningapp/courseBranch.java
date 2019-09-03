@@ -72,7 +72,7 @@ public class courseBranch extends AppCompatActivity implements AdapterView.OnIte
 
         AddSub = (Button) findViewById(R.id.AddSubject);
         AddSub.setOnClickListener(this);
-        AddSub.setVisibility(View.VISIBLE);
+        AddSub.setVisibility(View.INVISIBLE);
 
         mSubjectsAdapter = new SubjectsAdapter(Subjects, this);
         Intent intent = getIntent();
@@ -126,6 +126,7 @@ public class courseBranch extends AppCompatActivity implements AdapterView.OnIte
 
 
         if(Course == CSE&&Semister=="I"){
+            AddSub.setVisibility(View.VISIBLE);
             FetchCourseAsyncTask fetchCourseAsyncTask = new FetchCourseAsyncTask();
             fetchCourseAsyncTask.execute();
 

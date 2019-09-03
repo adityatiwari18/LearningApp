@@ -14,17 +14,17 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".AddCourse"></activity>
+        <activity android:name=".AddCourse"> </activity>
         android:theme="@style/AppTheme">
-        <activity android:name=".AddConcept"></activity>
+        <activity android:name=".AddConcept"> </activity>
         <activity
             android:name=".Concept"
             android:label="@string/title_activity_course_content"
             android:parentActivityName=".courseBranch"
             android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.learningapp.courseBranch" />
+            <!--<meta-data-->
+                <!--android:name="android.support.PARENT_ACTIVITY"-->
+                <!--android:value="com.example.learningapp.courseBranch" />-->
         </activity>
         <activity android:name=".courseBranch" />
         <activity
