@@ -6,7 +6,7 @@
     android:layout_height="wrap_content">
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/Concept"
+        android:id="@+id/Lesson"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -27,7 +27,7 @@
                 android:src="@drawable/bullets" />
 
             <TextView
-                android:id="@+id/subjects"
+                android:id="@+id/lesson"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:layout_marginStart="16dp"

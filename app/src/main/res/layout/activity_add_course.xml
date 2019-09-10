@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AddCourse"
+    tools:context=".AddCirriculum"
     android:orientation="vertical"
     android:padding="8dp">
 
@@ -12,18 +12,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Enter name of the course"
-        android:id="@+id/course_name"/>
+        android:id="@+id/curriculum_name"/>
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Enter description  of the course"
-        android:id="@+id/course_desc"
-        android:layout_marginTop="4dp"/>
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Enter duration of the course(in months)"
-        android:id="@+id/course_duration"
+        android:id="@+id/curriculum_desc"
         android:layout_marginTop="4dp"/>
 
     <Button

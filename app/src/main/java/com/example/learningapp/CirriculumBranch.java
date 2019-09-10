@@ -13,7 +13,6 @@ package com.example.learningapp;
         import android.widget.AdapterView;
         import android.widget.ArrayAdapter;
         import android.widget.Button;
-        import android.widget.ListView;
         import android.widget.Spinner;
         import android.widget.Toast;
 
@@ -25,18 +24,14 @@ package com.example.learningapp;
         import java.util.HashMap;
         import java.util.List;
 
-public class CourseBranch extends AppCompatActivity implements AdapterView.OnItemSelectedListener, View.OnClickListener {
+public class CirriculumBranch extends AppCompatActivity implements AdapterView.OnItemSelectedListener, View.OnClickListener {
 
     private static final String KEY_SUCCESS = "success";
     private static final String KEY_DATA = "data";
-    private static final String KEY_COURSE_ID="CO_id",
-            KEY_COURSE_NAME="CO_Name",
-            KEY_COURSE_DESC="CO_Desc",
-            KEY_COURSE_DURATION="CO_Duration",
-            KEY_COURSE_INSERTDATE="CO_Insertdate";
+    private static final String KEY_CIRRICULUM_NAME ="CU_Name",
+            KEY_CIRRICULUM_DESC ="CU_Desc";
     private static final String BASE_URL = "http://10.12.18.235/courses/db/";
-    private ArrayList<HashMap<String, String>> courseList;
-    private ListView courseListView;
+    private ArrayList<HashMap<String, String>> cirriculumList;
     private ProgressDialog pDialog;
 
 
@@ -121,8 +116,6 @@ public class CourseBranch extends AppCompatActivity implements AdapterView.OnIte
     void getSubjects(String Course, String Semister){
 //        FetchMoviesAsyncTask fetchMoviesAsyncTask = new FetchMoviesAsyncTask();
 //        fetchMoviesAsyncTask.execute();
-
-
         if(Course == CSE&&Semister=="I"){
             AddSub.setVisibility(View.VISIBLE);
             FetchCourseAsyncTask fetchCourseAsyncTask = new FetchCourseAsyncTask();
@@ -137,7 +130,7 @@ public class CourseBranch extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     public void onClick(View v) {
-        Intent intent = new Intent(this, AddCourse.class);
+        Intent intent = new Intent(this, AddCirriculum.class);
         startActivity(intent);
     }
 
@@ -160,7 +153,7 @@ public class CourseBranch extends AppCompatActivity implements AdapterView.OnIte
         protected void onPreExecute() {
             super.onPreExecute();
             //Display progress bar
-            pDialog = new ProgressDialog(CourseBranch.this);
+            pDialog = new ProgressDialog(CirriculumBranch.this);
             pDialog.setMessage("Loading course. Please wait...");
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(false);
@@ -171,22 +164,22 @@ public class CourseBranch extends AppCompatActivity implements AdapterView.OnIte
         protected String doInBackground(String... params) {
             HttpJsonParser httpJsonParser = new HttpJsonParser();
             JSONObject jsonObject = httpJsonParser.makeHttpRequest(
-                    BASE_URL + "fetch_all_course.php", "GET", null);
+                    BASE_URL + "fetch_all_cirriculum.php", "GET", null);
             try {
                 int success = jsonObject.getInt(KEY_SUCCESS);
-                JSONArray courses;
+                JSONArray cirriculum;
                 if (success == 1) {
-                    courseList = new ArrayList<>();
-                    courses = jsonObject.getJSONArray(KEY_DATA);
+                    cirriculumList = new ArrayList<>();
+                    cirriculum = jsonObject.getJSONArray(KEY_DATA);
                     //Iterate through the response and populate movies list
-                    for (int i = 0; i < courses.length(); i++) {
-                        JSONObject course = courses.getJSONObject(i);
-                        String courseDesc = course.getString(KEY_COURSE_DESC);
-                        String courseName = course.getString(KEY_COURSE_NAME);
+                    for (int i = 0; i < cirriculum.length(); i++) {
+                        JSONObject course = cirriculum.getJSONObject(i);
+                        String cirriculumDesc = course.getString(KEY_CIRRICULUM_DESC);
+                        String cirriculumName = course.getString(KEY_CIRRICULUM_NAME);
                         HashMap<String, String> map = new HashMap<String, String>();
-                        map.put(KEY_COURSE_DESC, courseDesc);
-                        map.put(KEY_COURSE_NAME, courseName);
-                        courseList.add(map);
+                        map.put(KEY_CIRRICULUM_DESC, cirriculumDesc);
+                        map.put(KEY_CIRRICULUM_NAME, cirriculumName);
+                        cirriculumList.add(map);
                     }
                 }
             } catch (JSONException e) {
@@ -199,10 +192,9 @@ public class CourseBranch extends AppCompatActivity implements AdapterView.OnIte
             pDialog.dismiss();
             runOnUiThread(new Runnable() {
                 public void run() {
-                    for(HashMap<String,String> data : courseList){
-                        Subjects.add(data.get(KEY_COURSE_NAME));
+                    for(HashMap<String,String> data : cirriculumList){
+                        Subjects.add(data.get(KEY_CIRRICULUM_NAME));
                     }
-
                     mSubjectsAdapter.setSubjects(Subjects);
                     mSubjectsAdapter.notifyDataSetChanged();
                 }

@@ -73,28 +73,28 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
         switch (v.getId()){
 
             case R.id.engineering:
-                Intent intent = new Intent(this, CourseBranch.class);
+                Intent intent = new Intent(this, CirriculumBranch.class);
                 if(intent!=null){
                     intent.putExtra("KEY","Engineering");
                     startActivity(intent);
                 }
                 break;
             case R.id.medical:
-                Intent intent2 = new Intent(this, CourseBranch.class);
+                Intent intent2 = new Intent(this, CirriculumBranch.class);
                 if(intent2!=null){
                     intent2.putExtra("KEY","Medical");
                     startActivity(intent2);
                 }
                 break;
             case R.id.law:
-                Intent intent3 = new Intent(this, CourseBranch.class);
+                Intent intent3 = new Intent(this, CirriculumBranch.class);
                 if(intent3!=null){
                     intent3.putExtra("KEY","Law");
                     startActivity(intent3);
                 }
                 break;
             case R.id.business:
-                Intent intent4 = new Intent(this, CourseBranch.class);
+                Intent intent4 = new Intent(this, CirriculumBranch.class);
                 if(intent4!=null){
                     intent4.putExtra("KEY","Business");
                     startActivity(intent4);

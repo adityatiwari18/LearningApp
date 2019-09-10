@@ -21,28 +21,24 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AddCourse extends AppCompatActivity implements View.OnClickListener {
-    private EditText courseNameEditText, courseDescEditText, courseDurationEditText;
+public class AddCirriculum extends AppCompatActivity implements View.OnClickListener {
+    private EditText cirriculumNameEditText, cirriculumDescEditText;
     private Button addButton, addImage;
-    private static final String KEY_COURSE_ID = "CO_id",
-            KEY_COURSE_NAME = "CO_Name",
-            KEY_COURSE_DESC = "CO_Desc",
-            KEY_COURSE_DURATION = "CO_Duration",
-            KEY_COURSE_INSERTDATE = "CO_Insertdate";
+    private static final String KEY_CIRRICULUM_NAME = "CU_Name",
+            KEY_CIRRICULUM_DESC = "CU_Desc";
     private static final String BASE_URL = "http://10.12.18.235/courses/db/";
     private static int RESULT_LOAD_IMAGE = 1;
     private static String STRING_EMPTY = "";
     private ProgressDialog cDialog;
     private int success;
-    String courseID, courseName, courseDesc, courseDuration;
+    String cirriculumName, cirriculumDesc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_course);
-        courseNameEditText = findViewById(R.id.course_name);
-        courseDescEditText = findViewById(R.id.course_desc);
-        courseDurationEditText = findViewById(R.id.course_duration);
+        cirriculumNameEditText = findViewById(R.id.curriculum_name);
+        cirriculumDescEditText = findViewById(R.id.curriculum_desc);
 
         addButton = findViewById(R.id.add_button);
         addImage = findViewById(R.id.image_concept);
@@ -65,7 +61,7 @@ public class AddCourse extends AppCompatActivity implements View.OnClickListener
                 if (CheckNetworkStatus.isNetworkAvailable(getApplicationContext())) {
                     addCourse();
                 } else {
-                    Toast.makeText(AddCourse.this,
+                    Toast.makeText(AddCirriculum.this,
                             "Unable to connect to internet",
                             Toast.LENGTH_LONG).show();
 
@@ -89,8 +85,6 @@ public class AddCourse extends AppCompatActivity implements View.OnClickListener
             String picturePath = cursor.getString(columnIndex);         //SAVED PICTURE PATH
             cursor.close();
 
-
-
         }
     }
 
@@ -104,19 +98,16 @@ public class AddCourse extends AppCompatActivity implements View.OnClickListener
      * Otherwise displays Toast message informing one or more fields left empty
      */
     private void addCourse() {
-        if (!STRING_EMPTY.equals(courseNameEditText.getText().toString()) &&
-                !STRING_EMPTY.equals(courseDescEditText.getText().toString()) &&
-                !STRING_EMPTY.equals(courseDurationEditText.getText().toString())) {
+        if (!STRING_EMPTY.equals(cirriculumNameEditText.getText().toString()) &&
+                !STRING_EMPTY.equals(cirriculumDescEditText.getText().toString())) {
 
-            courseName = courseNameEditText.getText().toString();
-            courseDesc = courseDescEditText.getText().toString();
-            courseDuration = courseDurationEditText.getText().toString();
+            cirriculumName = cirriculumNameEditText.getText().toString();
+            cirriculumDesc = cirriculumDescEditText.getText().toString();
             new AddCourseAsyncTask().execute();
         } else {
-            Toast.makeText(AddCourse.this,
+            Toast.makeText(AddCirriculum.this,
                     "One or more fields left empty!",
                     Toast.LENGTH_LONG).show();
-
         }
 
     }
@@ -129,7 +120,7 @@ public class AddCourse extends AppCompatActivity implements View.OnClickListener
         protected void onPreExecute() {
             super.onPreExecute();
             //Display proggress bar
-            cDialog = new ProgressDialog(AddCourse.this);
+            cDialog = new ProgressDialog(AddCirriculum.this);
             cDialog.setMessage("Adding Course. Please wait...");
             cDialog.setIndeterminate(false);
             cDialog.setCancelable(false);
@@ -141,12 +132,11 @@ public class AddCourse extends AppCompatActivity implements View.OnClickListener
             HttpJsonParser httpJsonParser = new HttpJsonParser();
             Map<String, String> httpParams = new HashMap<>();
             //Populating request parameters
-            httpParams.put(KEY_COURSE_NAME, courseName);
-            httpParams.put(KEY_COURSE_DESC, courseDesc);
-            httpParams.put(KEY_COURSE_DURATION, courseDuration);
+            httpParams.put(KEY_CIRRICULUM_NAME, cirriculumName);
+            httpParams.put(KEY_CIRRICULUM_DESC, cirriculumDesc);
 
             JSONObject jsonObject = httpJsonParser.makeHttpRequest(
-                    BASE_URL + "add_course.php", "POST", httpParams);
+                    BASE_URL + "add_cirriculum.php", "POST", httpParams);
             try {
                 success = jsonObject.getInt("success");
             } catch (JSONException e) {
@@ -161,8 +151,8 @@ public class AddCourse extends AppCompatActivity implements View.OnClickListener
                 public void run() {
                     if (success == 1) {
                         //Display success message
-                        Toast.makeText(AddCourse.this,
-                                "Course Added", Toast.LENGTH_LONG).show();
+                        Toast.makeText(AddCirriculum.this,
+                                "Cirriculum Added", Toast.LENGTH_LONG).show();
                         Intent i = getIntent();
                         //send result code 20 to notify about course update
                         setResult(20, i);
@@ -170,7 +160,7 @@ public class AddCourse extends AppCompatActivity implements View.OnClickListener
                         finish();
 
                     } else {
-                        Toast.makeText(AddCourse.this,
+                        Toast.makeText(AddCirriculum.this,
                                 "Some error occurred while adding course",
                                 Toast.LENGTH_LONG).show();
 

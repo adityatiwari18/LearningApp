@@ -21,33 +21,27 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AddConcept extends AppCompatActivity {
+public class AddLesson extends AppCompatActivity {
 
-    private EditText conceptNameEditText, conceptDescEditText, conceptDurationEditText;
+    private EditText lessonNameEditText;
     private Button addButton, addImage;
 
     public static int RESULT_LOAD_IMAGE = 1;
 
-    private static final String KEY_CONCEPT_ID = "CN_id",
-            KEY_CONCEPT_NAME = "CN_Name",
-            KEY_CONCEPT_DESC = "CN_Desc",
-            KEY_CONCEPT_DURATION = "CN_Duration",
-            KEY_CONCEPT_INSERTDATE = "CN_Insertdate";
+    private static final String KEY_CONCEPT_NAME = "LS_Name";
 
     private static final String BASE_URL = "http://10.12.18.235/courses/db/";
     private static String STRING_EMPTY = "";
     private ProgressDialog cDialog;
     private int success;
-    String conceptID, conceptName, conceptDesc, conceptDuration;
+    String lessonName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_concept);
 
-        conceptNameEditText = findViewById(R.id.concept_name);
-        conceptDescEditText = findViewById(R.id.concept_desc);
-        conceptDurationEditText = findViewById(R.id.concept_duration);
+        lessonNameEditText = findViewById(R.id.lesson_name);
 
         addButton = findViewById(R.id.add_concept_button);
 
@@ -59,7 +53,7 @@ public class AddConcept extends AppCompatActivity {
                 if (CheckNetworkStatus.isNetworkAvailable(getApplicationContext())) {
                     addConcept();
                 } else {
-                    Toast.makeText(AddConcept.this,
+                    Toast.makeText(AddLesson.this,
                             "Unable to connect to internet",
                             Toast.LENGTH_LONG).show();
 
@@ -103,16 +97,13 @@ public class AddConcept extends AppCompatActivity {
      * Otherwise displays Toast message informing one or more fields left empty
      */
     private void addConcept() {
-        if (!STRING_EMPTY.equals(conceptNameEditText.getText().toString()) &&
-                !STRING_EMPTY.equals(conceptDescEditText.getText().toString()) &&
-                !STRING_EMPTY.equals(conceptDurationEditText.getText().toString())) {
+        if (!STRING_EMPTY.equals(lessonNameEditText.getText().toString())) {
 
-            conceptName = conceptNameEditText.getText().toString();
-            conceptDesc = conceptDescEditText.getText().toString();
-            conceptDuration = conceptDurationEditText.getText().toString();
-            new AddConcept.AddConceptAsyncTask().execute();
+            lessonName = lessonNameEditText.getText().toString();
+
+            new AddLesson.AddConceptAsyncTask().execute();
         } else {
-            Toast.makeText(AddConcept.this,
+            Toast.makeText(AddLesson.this,
                     "One or more fields left empty!",
                     Toast.LENGTH_LONG).show();
 
@@ -128,7 +119,7 @@ public class AddConcept extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             //Display proggress bar
-            cDialog = new ProgressDialog(AddConcept.this);
+            cDialog = new ProgressDialog(AddLesson.this);
             cDialog.setMessage("Adding Concept. Please wait...");
             cDialog.setIndeterminate(false);
             cDialog.setCancelable(false);
@@ -140,12 +131,10 @@ public class AddConcept extends AppCompatActivity {
             HttpJsonParser httpJsonParser = new HttpJsonParser();
             Map<String, String> httpParams = new HashMap<>();
             //Populating request parameters
-            httpParams.put(KEY_CONCEPT_NAME, conceptName);
-            httpParams.put(KEY_CONCEPT_DESC, conceptDesc);
-            httpParams.put(KEY_CONCEPT_DURATION, conceptDuration);
+            httpParams.put(KEY_CONCEPT_NAME, lessonName);
 
             JSONObject jsonObject = httpJsonParser.makeHttpRequest(
-                    BASE_URL + "add_concept.php", "POST", httpParams);
+                    BASE_URL + "add_lesson.php", "POST", httpParams);
             try {
                 success = jsonObject.getInt("success");
             } catch (JSONException e) {
@@ -160,7 +149,7 @@ public class AddConcept extends AppCompatActivity {
                 public void run() {
                     if (success == 1) {
                         //Display success message
-                        Toast.makeText(AddConcept.this,
+                        Toast.makeText(AddLesson.this,
                                 "Concept Added", Toast.LENGTH_LONG).show();
                         Intent i = getIntent();
                         //send result code 20 to notify about movie update
@@ -169,7 +158,7 @@ public class AddConcept extends AppCompatActivity {
                         finish();
 
                     } else {
-                        Toast.makeText(AddConcept.this,
+                        Toast.makeText(AddLesson.this,
                                 "Some error occurred while adding course",
                                 Toast.LENGTH_LONG).show();
 

@@ -8,10 +8,11 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.View;
 import android.widget.Button;
-import android.widget.ListView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,22 +22,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class CourseContent extends AppCompatActivity {
+public class CirriculumContent extends AppCompatActivity {
 
     private Button AddConcept;
     private static final String KEY_SUCCESS = "success";
     private static final String KEY_DATA = "data";
-    private static final String KEY_CONCEPT_ID = "CN_id",
-            KEY_CONCEPT_NAME = "CN_Name",
-            KEY_CONCEPT_DESC = "CN_Desc",
-            KEY_CONCEPT_DURATION = "CN_Duration",
-            KEY_CONCEPT_INSERTDATE = "CN_Insertdate";
-    List<String> Concepts = new ArrayList<>();
-    ConceptAdapter mConceptAdapter;
+    private static final String KEY_LESSON_NAME = "LS_Name";
+    List<String> Lessons = new ArrayList<>();
+    LessonAdapter mLessonAdapter;
+    RecyclerView mRecyclerView;
 
     private static final String BASE_URL = "http://10.12.18.235/courses/db/";
-    private ArrayList<HashMap<String, String>> conceptList;
-    private ListView conceptListView;
+    private ArrayList<HashMap<String, String>> lessonList;
     private ProgressDialog pDialog;
 
     @Override
@@ -45,25 +42,34 @@ public class CourseContent extends AppCompatActivity {
         setContentView(R.layout.activity_course_content);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        CirriculumContent.FetchConceptAsyncTask fetchConceptAsyncTask = new CirriculumContent.FetchConceptAsyncTask();
+        fetchConceptAsyncTask.execute();
+        mLessonAdapter =  new LessonAdapter(Lessons, this);
+        Intent intent = getIntent();
+        String Course = intent.getStringExtra("KEY");
 
+        mRecyclerView = (RecyclerView) findViewById(R.id.concept_recyclerview);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setAdapter(mLessonAdapter);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        AddConcept = (Button) findViewById(R.id.add_button);
+        AddConcept = findViewById(R.id.add_concept_button);
         AddConcept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(CourseContent.this, com.example.learningapp.AddConcept.class);
+                Intent i = new Intent(CirriculumContent.this, AddLesson.class);
                 startActivity(i);
             }
         });
+
     }
     private class FetchConceptAsyncTask extends AsyncTask<String, String, String> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
             //Display progress bar
-            pDialog = new ProgressDialog(CourseContent.this);
-            pDialog.setMessage("Loading concept. Please wait...");
+            pDialog = new ProgressDialog(CirriculumContent.this);
+            pDialog.setMessage("Loading lessons. Please wait...");
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(false);
             pDialog.show();
@@ -73,22 +79,20 @@ public class CourseContent extends AppCompatActivity {
         protected String doInBackground(String... params) {
             HttpJsonParser httpJsonParser = new HttpJsonParser();
             JSONObject jsonObject = httpJsonParser.makeHttpRequest(
-                    BASE_URL + "fetch_all_concept.php", "GET", null);
+                    BASE_URL + "fetch_all_lesson.php", "GET", null);
             try {
                 int success = jsonObject.getInt(KEY_SUCCESS);
-                JSONArray courses;
+                JSONArray lesson;
                 if (success == 1) {
-                    conceptList = new ArrayList<>();
-                    courses = jsonObject.getJSONArray(KEY_DATA);
+                    lessonList = new ArrayList<>();
+                    lesson = jsonObject.getJSONArray(KEY_DATA);
                     //Iterate through the response and populate movies list
-                    for (int i = 0; i < courses.length(); i++) {
-                        JSONObject course = courses.getJSONObject(i);
-                        String conceptDesc = course.getString(KEY_CONCEPT_DESC);
-                        String conceptName = course.getString(KEY_CONCEPT_NAME);
+                    for (int i = 0; i < lesson.length(); i++) {
+                        JSONObject lessonJSONObject = lesson.getJSONObject(i);
+                        String lessonName = lessonJSONObject.getString(KEY_LESSON_NAME);
                         HashMap<String, String> map = new HashMap<String, String>();
-                        map.put(KEY_CONCEPT_DESC, conceptDesc);
-                        map.put(KEY_CONCEPT_NAME, conceptName);
-                        conceptList.add(map);
+                        map.put(KEY_LESSON_NAME, lessonName);
+                        lessonList.add(map);
                     }
                 }
             } catch (JSONException e) {
@@ -101,11 +105,11 @@ public class CourseContent extends AppCompatActivity {
             pDialog.dismiss();
             runOnUiThread(new Runnable() {
                 public void run() {
-                    for(HashMap<String,String> data : conceptList){
-                        Concepts.add(data.get(KEY_CONCEPT_NAME));
+                    for(HashMap<String,String> data : lessonList){
+                        Lessons.add(data.get(KEY_LESSON_NAME));
                     }
-                    mConceptAdapter.setConcept(Concepts);
-                    mConceptAdapter.notifyDataSetChanged();
+                    mLessonAdapter.setConcept(Lessons);
+                    mLessonAdapter.notifyDataSetChanged();
                 }
             });
         }

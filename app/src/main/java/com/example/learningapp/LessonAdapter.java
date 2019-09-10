@@ -12,14 +12,14 @@ import android.widget.TextView;
 
 import java.util.List;
 
-public class ConceptAdapter extends RecyclerView.Adapter<ConceptAdapter.Viewholder> {
+public class LessonAdapter extends RecyclerView.Adapter<LessonAdapter.Viewholder> {
 
     private static final String TAG = "MyAdapter";
 
     private List<String> Data;
     private Context mContext;
 
-    public ConceptAdapter(List<String> data, Context context) {
+    public LessonAdapter(List<String> data, Context context) {
         Data = data;
         mContext = context;
     }
@@ -63,8 +63,8 @@ public class ConceptAdapter extends RecyclerView.Adapter<ConceptAdapter.Viewhold
         public Viewholder(@NonNull final View itemView) {
             super(itemView);
 
-            this.Title = (TextView) itemView.findViewById(R.id.subjects);
-            this.Subject = (CardView) itemView.findViewById(R.id.Concept);
+            this.Title = (TextView) itemView.findViewById(R.id.lesson);
+            this.Subject = (CardView) itemView.findViewById(R.id.Lesson);
             this.mContext = itemView.getContext();
         }
     }

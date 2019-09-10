@@ -14,26 +14,24 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".AddCourse"> </activity>
-        android:theme="@style/AppTheme">
-        <activity android:name=".AddConcept"></activity>
+        <activity android:name=".AddCirriculum"/>
+        <activity android:name=".AddLesson"/>
         <activity
-            android:name=".Concept"
+            android:name=".CirriculumContent"
             android:label="@string/title_activity_course_content"
-            android:parentActivityName=".CourseBranch"
+            android:parentActivityName=".CirriculumBranch"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.learningapp.CourseBranch" />
+                android:value="com.example.learningapp.CirriculumBranch" />
         </activity>
-        <activity android:name=".CourseBranch" />
+        <activity android:name=".CirriculumBranch" />
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
